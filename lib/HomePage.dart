@@ -12,6 +12,14 @@ class _HomePageState extends State<HomePage> {
   int age = 34;
   double weight = 67.5;
 
+  double sliderValue = 100.25;
+  double minValue = 20;
+  double maxValue = 200;
+
+  bool gender = true;
+
+  double? bmiResult;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,9 +30,17 @@ class _HomePageState extends State<HomePage> {
         child: ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.pink),
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ResultPage()));
-              ;
+              bmiResult = (weight / sliderValue / sliderValue) * 10000;
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ResultPage(
+                            bmiResult: bmiResult ?? 0.0,
+                          )));
+
+              // print('${(weight / sliderValue / sliderValue) * 10000}');
+
+              print(bmiResult);
             },
             child: Text(
               'Calculator yout bmi'.toUpperCase(),
@@ -35,7 +51,7 @@ class _HomePageState extends State<HomePage> {
             )),
       ),
       appBar: AppBar(
-        backgroundColor: Colors.blueGrey.shade900,
+        backgroundColor: Color(0xff0a0c23),
         leading: IconButton(onPressed: () {}, icon: Icon(Icons.menu)),
         title: Text('BMI Calculator'.toUpperCase()),
         centerTitle: true,
@@ -45,7 +61,7 @@ class _HomePageState extends State<HomePage> {
           margin: const EdgeInsets.only(top: 10),
           padding: EdgeInsets.symmetric(horizontal: 15),
           width: double.infinity,
-          color: Colors.blueGrey.shade900,
+          color: Color(0xff0a0c23),
           child: Column(children: [
             // General Widget
             Padding(
@@ -53,50 +69,69 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    height: 175,
-                    width: 175,
-                    color: Colors.grey.shade800,
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.male,
-                            color: Colors.white,
-                            size: 70,
-                          ),
-                          Text(
-                            'Male'.toUpperCase(),
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600),
-                          )
-                        ]),
+                  InkWell(
+                    onTap: () {
+                      print('male selected');
+                      setState(() {
+                        gender = !gender;
+                      });
+                    },
+                    child: Container(
+                      height: 175,
+                      width: 175,
+                      color: Color(0xff1d2033),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.male,
+                              color: gender ? Colors.white : Colors.grey,
+                              size: 70,
+                            ),
+                            Text(
+                              'Male'.toUpperCase(),
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: gender ? Colors.white : Colors.grey,
+                                  fontWeight: FontWeight.w600),
+                            )
+                          ]),
+                    ),
                   ),
                   SizedBox(
                     width: 10,
                   ),
-                  Container(
-                    height: 175,
-                    width: 175,
-                    color: Colors.grey.shade800,
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.female,
-                            color: Colors.white,
-                            size: 70,
-                          ),
-                          Text(
-                            'Female'.toUpperCase(),
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600),
-                          )
-                        ]),
+                  InkWell(
+                    onTap: () {
+                      print('Female Selected');
+                      setState(() {
+                        gender = !gender;
+                      });
+                    },
+                    child: Container(
+                      height: 175,
+                      width: 175,
+                      color: Color(0xff1d2033),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.female,
+                              color:
+                                  gender == false ? Colors.white : Colors.grey,
+                              size: 70,
+                            ),
+                            Text(
+                              'Female'.toUpperCase(),
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: gender == false
+                                      ? Colors.white
+                                      : Colors.grey,
+                                  fontWeight: FontWeight.w600),
+                            )
+                          ]),
+                    ),
                   )
                 ],
               ),
@@ -106,7 +141,7 @@ class _HomePageState extends State<HomePage> {
             Container(
               width: double.infinity,
               height: 200,
-              color: Colors.grey.shade800,
+              color: Color(0xff1d2033),
               padding: EdgeInsets.symmetric(vertical: 15),
               child: Column(
                 children: [
@@ -125,7 +160,7 @@ class _HomePageState extends State<HomePage> {
                   RichText(
                       text: TextSpan(children: [
                     TextSpan(
-                      text: '183',
+                      text: sliderValue.toStringAsFixed(2),
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 44,
@@ -146,10 +181,14 @@ class _HomePageState extends State<HomePage> {
                   Slider(
                       activeColor: Colors.white,
                       thumbColor: Colors.pink,
-                      value: 100.89,
-                      min: 40,
-                      max: 200,
-                      onChanged: (value) {})
+                      value: sliderValue,
+                      min: minValue,
+                      max: maxValue,
+                      onChanged: (value) {
+                        setState(() {
+                          sliderValue = value;
+                        });
+                      })
                 ],
               ),
             ),
@@ -165,7 +204,7 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     height: 175,
                     width: 175,
-                    color: Colors.grey.shade800,
+                    color: Color(0xff1d2033),
                     child: Column(
                       children: [
                         SizedBox(
@@ -191,32 +230,46 @@ class _HomePageState extends State<HomePage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Container(
-                              height: 45,
-                              width: 45,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.grey.shade700,
-                              ),
-                              child: Icon(
-                                Icons.remove,
-                                color: Colors.white,
-                                size: 32,
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  age--;
+                                });
+                              },
+                              child: Container(
+                                height: 45,
+                                width: 45,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.grey.shade700,
+                                ),
+                                child: Icon(
+                                  Icons.remove,
+                                  color: Colors.white,
+                                  size: 32,
+                                ),
                               ),
                             ),
                             SizedBox(
                               width: 10,
                             ),
-                            Container(
-                              height: 45,
-                              width: 45,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.grey.shade700),
-                              child: Icon(
-                                Icons.add,
-                                color: Colors.white,
-                                size: 32,
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  age++;
+                                });
+                              },
+                              child: Container(
+                                height: 45,
+                                width: 45,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.grey.shade700),
+                                child: Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                  size: 32,
+                                ),
                               ),
                             )
                           ],
@@ -230,7 +283,7 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     height: 175,
                     width: 175,
-                    color: Colors.grey.shade800,
+                    color: Color(0xff1d2033),
                     child: Column(
                       children: [
                         SizedBox(
@@ -256,32 +309,46 @@ class _HomePageState extends State<HomePage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Container(
-                              height: 45,
-                              width: 45,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.grey.shade700,
-                              ),
-                              child: Icon(
-                                Icons.remove,
-                                color: Colors.white,
-                                size: 32,
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  weight = weight - 0.5;
+                                });
+                              },
+                              child: Container(
+                                height: 45,
+                                width: 45,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.grey.shade700,
+                                ),
+                                child: Icon(
+                                  Icons.remove,
+                                  color: Colors.white,
+                                  size: 32,
+                                ),
                               ),
                             ),
                             SizedBox(
                               width: 10,
                             ),
-                            Container(
-                              height: 45,
-                              width: 45,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.grey.shade700),
-                              child: Icon(
-                                Icons.add,
-                                color: Colors.white,
-                                size: 32,
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  weight = weight + 0.5;
+                                });
+                              },
+                              child: Container(
+                                height: 45,
+                                width: 45,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.grey.shade700),
+                                child: Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                  size: 32,
+                                ),
                               ),
                             ),
                           ],
